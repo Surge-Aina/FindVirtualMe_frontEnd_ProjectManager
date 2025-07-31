@@ -3,53 +3,53 @@
 /* ========== CARD COMPONENTS ========== */
 
 .card-base {
-    @apply bg-slate-800 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 transition-all duration-300 hover: shadow-xl hover: border-white/30;
+    @apply bg-slate-800 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:border-white/30;
 }
 
 .card-glassmorphism {
-    @apply backdrop-blur-xl bg-slate-900/70 border border-white/30 rounded-2xl transition-all duration-300 shadow-[0_8px_32px_rgba(0, 0, 0, 0.25)] hover: shadow-[0_16px_48px_rgba(0, 0, 0, 0.35)];
+    @apply backdrop-blur-xl bg-slate-900/70 border border-white/30 rounded-2xl transition-all duration-300 shadow-[0_8px_32px_rgba(0_0_0_0.25)] hover:shadow-[0_16px_48px_rgba(0_0_0_0.35)];
 }
 
 .card-main-section {
-    @apply backdrop-blur-xl bg-slate-900/95 border border-white/40 rounded-2xl p-10 transition-all duration-300 shadow-[0_8px_32px_rgba(0, 0, 0, 0.35)] hover: shadow-[0_16px_48px_rgba(0, 0, 0, 0.45)] hover: scale-[1.01] text-white;
+    @apply backdrop-blur-xl bg-slate-900/95 border border-white/40 rounded-2xl p-10 transition-all duration-300 shadow-[0_8px_32px_rgba(0_0_0_0.35)] hover:shadow-[0_16px_48px_rgba(0_0_0_0.45)] hover:scale-[1.01] text-white;
 }
 
 
 /* ========== FORM COMPONENTS ========== */
 
 .input-base {
-    @apply w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus: border-blue-400 focus: outline-none focus: ring-2 focus: ring-blue-400/50;
+    @apply w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50;
 }
 
 .textarea-base {
-    @apply w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus: border-blue-400 focus: outline-none focus: ring-2 focus: ring-blue-400/50 resize-none;
+    @apply w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 resize-none;
 }
 
 
 /* ========== BUTTON COMPONENTS ========== */
 
 .btn-primary {
-    @apply px-6 py-3 bg-blue-600 hover: bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 disabled: opacity-50;
+    @apply px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 disabled:opacity-50;
 }
 
 .btn-secondary {
-    @apply px-4 py-2 bg-blue-600 hover: bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500;
+    @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500;
 }
 
 .btn-icon {
-    @apply p-2 text-blue-400 hover: text-blue-300 rounded-full hover: bg-blue-500/20 transition-colors;
+    @apply p-2 text-blue-400 hover:text-blue-300 rounded-full hover:bg-blue-500/20 transition-colors;
 }
 
 .btn-icon-success {
-    @apply p-2 text-green-400 hover: text-green-300 rounded-full hover: bg-green-500/20 transition-colors;
+    @apply p-2 text-green-400 hover:text-green-300 rounded-full hover:bg-green-500/20 transition-colors;
 }
 
 .btn-icon-danger {
-    @apply p-2 text-red-400 hover: text-red-300 rounded-full hover: bg-red-500/20 transition-colors;
+    @apply p-2 text-red-400 hover:text-red-300 rounded-full hover:bg-red-500/20 transition-colors;
 }
 
 .btn-icon-neutral {
-    @apply p-2 text-slate-300 hover: text-white rounded-full hover: bg-slate-700/50 transition-colors;
+    @apply p-2 text-slate-300 hover:text-white rounded-full hover:bg-slate-700/50 transition-colors;
 }
 
 
@@ -118,22 +118,22 @@
 /* ========== GRID COMPONENTS ========== */
 
 .grid-cards {
-    @apply grid grid-cols-1 md: grid-cols-2 gap-6;
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
 }
 
 .grid-main-layout {
-    @apply grid grid-cols-1 lg: grid-cols-12 gap-8 mb-16;
+    @apply grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16;
 }
 
 
 /* ========== HOVER EFFECTS ========== */
 
 .hover-scale-sm {
-    @apply hover: scale-[1.01];
+    @apply hover:scale-[1.01];
 }
 
 .hover-scale-md {
-    @apply hover: scale-[1.02];
+    @apply hover:scale-[1.02];
 }
 
 
@@ -151,7 +151,7 @@
 /* ========== BADGES/PILLS ========== */
 
 .badge-blue {
-    @apply inline-flex items-center gap-2 bg-blue-500/20 text-blue-200 text-sm font-medium px-4 py-2 rounded-full border border-blue-400/30 hover: bg-blue-500/30 transition-colors;
+    @apply inline-flex items-center gap-2 bg-blue-500/20 text-blue-200 text-sm font-medium px-4 py-2 rounded-full border border-blue-400/30 hover:bg-blue-500/30 transition-colors;
 }
 
 .badge-skill {
@@ -200,7 +200,7 @@
 /* ========== SOCIAL ICONS ========== */
 
 .social-icon {
-    @apply p-3 bg-slate-700/80 text-white rounded-full hover: bg-slate-600/80 transition-all shadow-lg border border-white/20;
+    @apply p-3 bg-slate-700/80 text-white rounded-full hover:bg-slate-600/80 transition-all shadow-lg border border-white/20;
 }
 
 
@@ -244,11 +244,11 @@
 /* ========== RESPONSIVE UTILITIES ========== */
 
 .col-span-profile {
-    @apply lg: col-span-4;
+    @apply lg:col-span-4;
 }
 
 .col-span-main {
-    @apply lg: col-span-8;
+    @apply lg:col-span-8;
 }
 
 
@@ -262,11 +262,11 @@
 /* ========== NAVBAR ========== */
 
 .nav-link {
-    @apply text-slate-200 hover: text-white transition-colors drop-shadow-sm;
+    @apply text-slate-200 hover:text-white transition-colors drop-shadow-sm;
 }
 
 .nav-brand {
-    @apply text-xl font-medium text-white hover: text-blue-400 transition flex items-center gap-3;
+    @apply text-xl font-medium text-white hover:text-blue-400 transition flex items-center gap-3;
 }
 
 .nav-logo {
@@ -274,11 +274,11 @@
 }
 
 .nav-button {
-    @apply px-4 py-2 font-medium text-white hover: text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover: bg-white/10;
+    @apply px-4 py-2 font-medium text-white hover:text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover:bg-white/10;
 }
 
 .nav-button-logout {
-    @apply px-4 py-2 font-medium text-white hover: text-red-400 transition-colors duration-200 border border-white/20 bg-transparent rounded-md hover: bg-red-500/10 hover: border-red-400/50;
+    @apply px-4 py-2 font-medium text-white hover:text-red-400 transition-colors duration-200 border border-white/20 bg-transparent rounded-md hover:bg-red-500/10 hover:border-red-400/50;
 }
 
 .hamburger-menu {
@@ -286,11 +286,11 @@
 }
 
 .hamburger-button {
-    @apply md: hidden p-2 text-white hover: text-blue-400 transition-colors;
+    @apply md:hidden p-2 text-white hover:text-blue-400 transition-colors;
 }
 
 .mobile-nav-button {
-    @apply w-full text-left px-4 py-3 font-medium text-white hover: text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover: bg-white/10;
+    @apply w-full text-left px-4 py-3 font-medium text-white hover:text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover:bg-white/10;
 }
 
 
@@ -323,11 +323,11 @@
 /* ========== JOB PROFILE COMPONENTS ========== */
 
 .job-card {
-    @apply bg-slate-800 backdrop-blur-lg border border-white/20 rounded-xl p-6 hover: border-white/30 transition-all duration-300;
+    @apply bg-slate-800 backdrop-blur-lg border border-white/20 rounded-xl p-6 hover:border-white/30 transition-all duration-300;
 }
 
 .file-upload-area {
-    @apply border-2 border-dashed border-slate-400 rounded-lg p-8 text-center hover: border-blue-400 transition-colors bg-slate-700/20;
+    @apply border-2 border-dashed border-slate-400 rounded-lg p-8 text-center hover:border-blue-400 transition-colors bg-slate-700/20;
 }
 
 .file-upload-area:hover {
