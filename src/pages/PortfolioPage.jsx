@@ -8,6 +8,7 @@ import EducationCard from "../components/projectManager/EducationCard";
 import ExperienceCard from "../components/projectManager/ExperienceCard";
 import ProjectsCard from "../components/projectManager/ProjectsCard";
 import SkillsCard from "../components/projectManager/SkillsCard";
+import FileUploader from "../components/FileUploader";
 
 const PortfolioPage = () => {
   const [activeSection, setActiveSection] = useState("summary");
@@ -15,7 +16,7 @@ const PortfolioPage = () => {
   const apiUrl = import.meta.env.VITE_BAKEND_API;
 
   const fetchPortfolio = async () => {
-    const res = await axios.get(`${apiUrl}/portfolio/me?email=testEmail@example.com`);
+    const res = await axios.get(`${apiUrl}/portfolio/me?email=janedoe@example.com`);
     return res.data;
   };
 
@@ -86,6 +87,8 @@ const PortfolioPage = () => {
         return <ProjectsCard projects={portfolio.projects} />;
       case "skills":
         return <SkillsCard skills={portfolio.skills} />;
+      case "fileUpload":
+        return <FileUploader portfolio={portfolio}/>;
       default:
         return <SummaryCard portfolio={portfolio} />;
     }

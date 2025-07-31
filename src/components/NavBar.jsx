@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const NavBar = ({ onSelect }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    toast.success('Logged out!');
-    navigate('/login');
+    localStorage.removeItem("token");
+    toast.success("Logged out!");
+    navigate("/login");
   };
 
   const handleMenuSelect = (section) => {
@@ -22,7 +22,8 @@ const NavBar = ({ onSelect }) => {
     { key: "education", label: "Education" },
     { key: "experience", label: "Experience" },
     { key: "projects", label: "Projects" },
-    { key: "skills", label: "Skills" }
+    { key: "skills", label: "Skills" },
+    { key: "fileUpload", label: "Compare Job Requirements" },
   ];
 
   return (
@@ -55,11 +56,26 @@ const NavBar = ({ onSelect }) => {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             {isMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             )}
           </svg>
         </button>
@@ -69,11 +85,11 @@ const NavBar = ({ onSelect }) => {
       {isMenuOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-30 md:hidden" 
+          <div
+            className="fixed inset-0 z-30 md:hidden"
             onClick={() => setIsMenuOpen(false)}
           />
-          
+
           {/* Menu */}
           <div className="fixed top-20 right-4 bg-slate-800/95 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-4 z-40 min-w-48 md:hidden">
             <div className="flex flex-col space-y-2">
@@ -95,4 +111,3 @@ const NavBar = ({ onSelect }) => {
 };
 
 export default NavBar;
-
