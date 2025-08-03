@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -9,10 +9,13 @@ import ExperienceCard from "../components/projectManager/ExperienceCard";
 import ProjectsCard from "../components/projectManager/ProjectsCard";
 import SkillsCard from "../components/projectManager/SkillsCard";
 import FileUploader from "../components/FileUploader";
+import { FaCamera } from "react-icons/fa";
 
 const PortfolioPage = () => {
   const [activeSection, setActiveSection] = useState("summary");
   const [animating, setAnimating] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
   const apiUrl = import.meta.env.VITE_BAKEND_API;
 
   const fetchPortfolio = async () => {
@@ -30,6 +33,18 @@ const PortfolioPage = () => {
     const timer = setTimeout(() => setAnimating(false), 300);
     return () => clearTimeout(timer);
   }, [activeSection]);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        // placeholder - we need to handle the actual upload later
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   if (isLoading) return (
     <div className="loading-container">
@@ -121,10 +136,38 @@ const PortfolioPage = () => {
             <div className="col-span-profile group">
               <div className="card-glassmorphism p-8 hover-scale-md">
                 <div className="flex flex-col items-center text-center mb-6">
-                  <div className="profile-avatar">
-                    <span className="text-4xl font-bold text-white drop-shadow-lg">
-                      {portfolio?.name?.[0] || 'P'}
-                    </span>
+                  <div 
+                    className="relative w-24 h-24 group cursor-pointer profile-avatar"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {/* Profile Image or Fallback */}
+                    <div className="w-full h-full rounded-full overflow-hidden border border-blue-400/30 shadow-lg">
+                      {imagePreview ? (
+                        <img 
+                          src={imagePreview} 
+                          alt={portfolio?.name || "Profile"} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-blue-500/20 flex items-center justify-center text-blue-200 font-bold text-4xl">
+                          {portfolio?.name?.[0] || 'P'}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Upload overlay */}
+                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                      <FaCamera className="text-white text-xl" />
+                    </div>
+
+                    {/* Hidden file input */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
                   </div>
                   <h2 className="text-2xl font-bold mb-1 text-white tracking-tight drop-shadow-sm">
                     {portfolio?.name || 'Portfolio Name'}
@@ -157,7 +200,7 @@ const PortfolioPage = () => {
               </div>
             </div>
 
-            {/* Main Info Card */}
+            {/* Main info card */}
             <div className="col-span-main group">
               <div className="card-glassmorphism p-8 hover-scale-sm">
                 <h1 className="text-heading-main mb-8">Professional Summary</h1>

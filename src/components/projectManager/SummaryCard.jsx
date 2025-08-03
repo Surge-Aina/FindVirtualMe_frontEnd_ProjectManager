@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { FaGithub, FaLinkedin, FaGlobe, FaPen, FaSave, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import { FaGithub, FaLinkedin, FaGlobe, FaPen, FaSave, FaTimes, FaCamera } from "react-icons/fa";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 const SummaryCard = ({ portfolio }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(portfolio || {});
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const queryClient = useQueryClient();
   const apiUrl = import.meta.env.VITE_BAKEND_API;
@@ -66,11 +68,16 @@ const SummaryCard = ({ portfolio }) => {
   };
 
   const handleSave = () => {
-    saveSummaryMutation.mutate(editData);
+    // Include the image in the saved data
+    saveSummaryMutation.mutate({
+      ...editData,
+      profileImage: imagePreview // This will be handled by your backend later
+    });
   };
 
   const handleCancel = () => {
     setEditData(portfolio || {});
+    setImagePreview(portfolio?.profileImage || null);
     setIsEditing(false);
   };
 
@@ -88,8 +95,53 @@ const SummaryCard = ({ portfolio }) => {
         )}
 
         <div className="flex items-center gap-6 mb-6 pr-12">
-          <div className="w-24 h-24 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-200 font-bold text-4xl shadow-lg">
-            {name?.[0]?.toUpperCase() || "U"}
+          <div 
+            className="relative w-24 h-24 group cursor-pointer"
+            onClick={() => isEditing && fileInputRef.current?.click()}
+          >
+            {/* Profile Image or Fallback */}
+            <div className="w-full h-full rounded-full overflow-hidden border border-blue-400/30 shadow-lg">
+              {imagePreview ? (
+                <img 
+                  src={imagePreview} 
+                  alt={name || "Profile"} 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-blue-500/20 flex items-center justify-center text-blue-200 font-bold text-4xl">
+                  {name?.[0]?.toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+
+            {/* Upload Overlay - Only visible when editing */}
+            {isEditing && (
+              <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                <FaCamera className="text-white text-xl" />
+              </div>
+            )}
+
+            {/* Hidden File Input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result);
+                    setEditData(prev => ({
+                      ...prev,
+                      profileImage: reader.result
+                    }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
           </div>
           <div className="flex-1">
             {isEditing ? (
