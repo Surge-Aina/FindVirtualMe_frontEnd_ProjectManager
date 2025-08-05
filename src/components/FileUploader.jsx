@@ -167,11 +167,20 @@ export default function FileUploader({ portfolio }) {
             placeholder="Copy and Paste job posting"
           />
 
-          <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareResume}>
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
+            <button
+              className="btn-primary w-full sm:w-auto"
+              onClick={compareResume}
+            >
               Compare
             </button>
-            <button className="btn-primary" onClick={compareWithAI}>
+            <button
+              disabled={loading}
+              className={`btn-primary w-full sm:w-auto ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={compareWithAI}
+            >
               Compare with AI
             </button>
           </div>
@@ -206,13 +215,16 @@ export default function FileUploader({ portfolio }) {
               />
             )}
           </div>
-          <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareResume}>
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
+            <button
+              className="btn-primary w-full sm:w-auto"
+              onClick={compareResume}
+            >
               Compare
             </button>
             <button
               disabled={loading}
-              className={`btn-primary ${
+              className={`btn-primary w-full sm:w-auto ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               onClick={compareWithAI}

@@ -27,58 +27,79 @@ const NavBar = ({ onSelect }) => {
   ];
 
   return (
-    <nav className="bg-transparent">
-      <div className="flex items-center gap-6">
-        {/* Logout Button - Always Visible (Now First) */}
-        <button
-          className="px-4 py-2 font-medium text-white hover:text-red-400 transition-colors duration-200 border border-white/20 bg-transparent rounded-md hover:bg-red-500/10 hover:border-red-400/50"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+    <nav className="bg-transparent w-full">
+      <div className="flex items-center justify-between pl-8 pr-8 py-4">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center w-full">
+          {/* Menu links */}
+          <div className="flex items-center gap-1 flex-1 ml-8">
+            {navItems
+              .filter((item) => item.key !== "fileUpload")
+              .map((item) => (
+                <button
+                  key={item.key}
+                  className="px-4 py-2 font-medium text-white hover:text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover:bg-white/10"
+                  onClick={() => onSelect(item.key)}
+                >
+                  {item.label}
+                </button>
+              ))}
+          </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
+          {/* Right-side buttons */}
+          <div className="flex items-center gap-2 ml-2">
             <button
-              key={item.key}
-              className="px-4 py-2 font-medium text-white hover:text-blue-400 transition-colors duration-200 border-none bg-transparent rounded-md hover:bg-white/10"
-              onClick={() => onSelect(item.key)}
+              className="px-4 py-2 font-medium text-white border border-blue-400 bg-transparent rounded-md hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500 transition whitespace-nowrap"
+              onClick={() => onSelect("fileUpload")}
             >
-              {item.label}
+              Compare Job Requirements
             </button>
-          ))}
+            <button
+              className="px-4 py-2 font-medium text-white border border-red-400 bg-transparent rounded-md hover:bg-red-500/10 hover:text-red-400 hover:border-red-500 transition whitespace-nowrap"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Hamburger Button (Now Last) */}
-        <button
-          className="md:hidden p-2 text-white hover:text-blue-400 transition-colors ml-auto"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {/* Mobile Hamburger Button & Logout */}
+        <div className="flex items-center md:hidden gap-2 ml-auto">
+          <button
+            className="p-2 text-white hover:text-blue-400 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
-            {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+          <button
+            className="p-2 text-white hover:text-red-400 transition-colors border border-white/20 bg-transparent rounded-md hover:bg-red-500/10 hover:border-red-400/50"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
