@@ -13,11 +13,8 @@
 
 // export default App
 
-
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -25,7 +22,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

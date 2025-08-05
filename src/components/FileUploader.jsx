@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import pdfToText from "react-pdftotext";
 import ReactMarkdown from "react-markdown";
+import { toast } from "react-toastify";
 
 export default function FileUploader({ portfolio }) {
   const apiUrl = import.meta.env.VITE_BAKEND_API;
@@ -41,6 +42,12 @@ export default function FileUploader({ portfolio }) {
   };
 
   const compareResume = async () => {
+    if (!file && fileContent === "") {
+      console.log(file, fileContent);
+      toast.error("No job post");
+      setMatchedWords([]);
+      return;
+    }
     const stopWords = new Set([
       "a",
       "an",
@@ -111,7 +118,7 @@ export default function FileUploader({ portfolio }) {
 
     const jobWordsSet = new Set(jobPostWords.filter(Boolean));
 
-    // You can now compare sets:
+    //compare sets
     const commonWords = [...jobWordsSet].filter((word) =>
       portfolioSet.has(word)
     );
@@ -123,12 +130,56 @@ export default function FileUploader({ portfolio }) {
     setFileContent("");
   };
 
+  //only compare portfolio skills
+  const compareSkills = async () => {
+    if (!file && fileContent === "") {
+      console.log(file, fileContent);
+      toast.error("No job post");
+      setMatchedWords([]);
+      return;
+    }
+    let extractedText = "";
+    if (file?.type === "application/pdf") {
+      try {
+        extractedText = await pdfToText(file);
+      } catch (err) {
+        console.error("Failed to extract text from pdf", err);
+        return;
+      }
+    } else {
+      extractedText = fileContent;
+    }
+
+    // Process extracted text from resume
+    const jobPostWords = extractedText
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .split(/\s+/);
+
+    const jobWordsSet = new Set(jobPostWords.filter(Boolean));
+
+    //portfolio Set
+    const portfolioSkills = new Set(
+      portfolio.skills.map((item) => item.toLowerCase())
+    );
+    //compare sets
+    const commonWords = [...jobWordsSet].filter((word) =>
+      portfolioSkills.has(word)
+    );
+
+    setMatchedWords(commonWords);
+    console.log("Words in both portfolio and resume:", commonWords);
+    console.log("sets", portfolioSkills, jobWordsSet);
+    setFile(null);
+    setFileContent("");
+  };
+
   const compareWithAI = async () => {
     if (loading) return;
     const resume = portfolio;
     const jobPost = fileContent;
     if (!jobPost) {
-      console.log("No job post");
+      toast.error("No job post");
       return;
     }
     setLoading(true);
@@ -168,7 +219,7 @@ export default function FileUploader({ portfolio }) {
           />
 
           <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareResume}>
+            <button className="btn-primary" onClick={compareSkills}>
               Compare
             </button>
             <button className="btn-primary" onClick={compareWithAI}>
@@ -207,7 +258,7 @@ export default function FileUploader({ portfolio }) {
             )}
           </div>
           <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareResume}>
+            <button className="btn-primary" onClick={compareSkills}>
               Compare
             </button>
             <button
