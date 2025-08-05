@@ -222,7 +222,13 @@ export default function FileUploader({ portfolio }) {
             <button className="btn-primary" onClick={compareSkills}>
               Compare
             </button>
-            <button className="btn-primary" onClick={compareWithAI}>
+            <button
+              disabled={loading}
+              className={`btn-primary w-full sm:w-auto ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={compareWithAI}
+            >
               Compare with AI
             </button>
           </div>
@@ -263,7 +269,7 @@ export default function FileUploader({ portfolio }) {
             </button>
             <button
               disabled={loading}
-              className={`btn-primary ${
+              className={`btn-primary w-full sm:w-auto ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               onClick={compareWithAI}
