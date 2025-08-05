@@ -17,6 +17,8 @@ export default function FileUploader({ portfolio }) {
     if (!selectedFile) return;
 
     setFile(selectedFile);
+    setMatchedWords("");
+    setAIResponse("");
 
     if (selectedFile.type === "text/plain") {
       const reader = new FileReader();
@@ -127,7 +129,7 @@ export default function FileUploader({ portfolio }) {
     console.log("Words in both portfolio and resume:", commonWords);
     console.log("Words in both portfolio and resume:", matchedWords);
     setFile(null);
-    setFileContent("");
+    //setFileContent("");
   };
 
   //only compare portfolio skills
@@ -171,7 +173,8 @@ export default function FileUploader({ portfolio }) {
     console.log("Words in both portfolio and resume:", commonWords);
     console.log("sets", portfolioSkills, jobWordsSet);
     setFile(null);
-    setFileContent("");
+    //setFileContent("");
+    setAIResponse("");
   };
 
   const compareWithAI = async () => {
@@ -191,7 +194,8 @@ export default function FileUploader({ portfolio }) {
       console.log("response", res.data);
       setAIResponse(res.data);
       setFile(null);
-      setFileContent("");
+      //setFileContent("");
+      setMatchedWords("");
     } catch (error) {
       console.error("Error calling compare API:", error);
     } finally {
@@ -214,12 +218,16 @@ export default function FileUploader({ portfolio }) {
         <div className="flex flex-col space-y-2">
           <textarea
             className="mt-3 mb-3 whitespace-pre-wrap bg-slate-800 p-3 rounded min-h-48 overflow-auto"
+            value={fileContent}
             onChange={handleTextContentChange}
             placeholder="Copy and Paste job posting"
           />
 
-          <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareSkills}>
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
+            <button
+              className="btn-primary w-full sm:w-auto"
+              onClick={compareSkills}
+            >
               Compare
             </button>
             <button
@@ -263,8 +271,11 @@ export default function FileUploader({ portfolio }) {
               />
             )}
           </div>
-          <div className="flex justify-between">
-            <button className="btn-primary" onClick={compareSkills}>
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
+            <button
+              className="btn-primary w-full sm:w-auto"
+              onClick={compareSkills}
+            >
               Compare
             </button>
             <button
