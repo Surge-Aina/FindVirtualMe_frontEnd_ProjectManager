@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import pdfToText from "react-pdftotext";
 import ReactMarkdown from "react-markdown";
+import { toast } from "react-toastify";
 
 export default function FileUploader({ portfolio }) {
   const apiUrl = import.meta.env.VITE_BAKEND_API;
@@ -16,6 +17,8 @@ export default function FileUploader({ portfolio }) {
     if (!selectedFile) return;
 
     setFile(selectedFile);
+    setMatchedWords("");
+    setAIResponse("");
 
     if (selectedFile.type === "text/plain") {
       const reader = new FileReader();
@@ -41,6 +44,12 @@ export default function FileUploader({ portfolio }) {
   };
 
   const compareResume = async () => {
+    if (!file && fileContent === "") {
+      console.log(file, fileContent);
+      toast.error("No job post");
+      setMatchedWords([]);
+      return;
+    }
     const stopWords = new Set([
       "a",
       "an",
@@ -111,7 +120,7 @@ export default function FileUploader({ portfolio }) {
 
     const jobWordsSet = new Set(jobPostWords.filter(Boolean));
 
-    // You can now compare sets:
+    //compare sets
     const commonWords = [...jobWordsSet].filter((word) =>
       portfolioSet.has(word)
     );
@@ -120,7 +129,52 @@ export default function FileUploader({ portfolio }) {
     console.log("Words in both portfolio and resume:", commonWords);
     console.log("Words in both portfolio and resume:", matchedWords);
     setFile(null);
-    setFileContent("");
+    //setFileContent("");
+  };
+
+  //only compare portfolio skills
+  const compareSkills = async () => {
+    if (!file && fileContent === "") {
+      console.log(file, fileContent);
+      toast.error("No job post");
+      setMatchedWords([]);
+      return;
+    }
+    let extractedText = "";
+    if (file?.type === "application/pdf") {
+      try {
+        extractedText = await pdfToText(file);
+      } catch (err) {
+        console.error("Failed to extract text from pdf", err);
+        return;
+      }
+    } else {
+      extractedText = fileContent;
+    }
+
+    // Process extracted text from resume
+    const jobPostWords = extractedText
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .split(/\s+/);
+
+    const jobWordsSet = new Set(jobPostWords.filter(Boolean));
+
+    //portfolio Set
+    const portfolioSkills = new Set(
+      portfolio.skills.map((item) => item.toLowerCase())
+    );
+    //compare sets
+    const commonWords = [...jobWordsSet].filter((word) =>
+      portfolioSkills.has(word)
+    );
+
+    setMatchedWords(commonWords);
+    console.log("Words in both portfolio and resume:", commonWords);
+    console.log("sets", portfolioSkills, jobWordsSet);
+    setFile(null);
+    //setFileContent("");
+    setAIResponse("");
   };
 
   const compareWithAI = async () => {
@@ -128,7 +182,7 @@ export default function FileUploader({ portfolio }) {
     const resume = portfolio;
     const jobPost = fileContent;
     if (!jobPost) {
-      console.log("No job post");
+      toast.error("No job post");
       return;
     }
     setLoading(true);
@@ -140,7 +194,8 @@ export default function FileUploader({ portfolio }) {
       console.log("response", res.data);
       setAIResponse(res.data);
       setFile(null);
-      setFileContent("");
+      //setFileContent("");
+      setMatchedWords("");
     } catch (error) {
       console.error("Error calling compare API:", error);
     } finally {
@@ -163,6 +218,7 @@ export default function FileUploader({ portfolio }) {
         <div className="flex flex-col space-y-2">
           <textarea
             className="mt-3 mb-3 whitespace-pre-wrap bg-slate-800 p-3 rounded min-h-48 overflow-auto"
+            value={fileContent}
             onChange={handleTextContentChange}
             placeholder="Copy and Paste job posting"
           />
@@ -170,7 +226,7 @@ export default function FileUploader({ portfolio }) {
           <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
             <button
               className="btn-primary w-full sm:w-auto"
-              onClick={compareResume}
+              onClick={compareSkills}
             >
               Compare
             </button>
@@ -218,7 +274,7 @@ export default function FileUploader({ portfolio }) {
           <div className="flex flex-col sm:flex-row gap-4 sm:justify-between mt-4">
             <button
               className="btn-primary w-full sm:w-auto"
-              onClick={compareResume}
+              onClick={compareSkills}
             >
               Compare
             </button>
