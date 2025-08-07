@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
-import { FaPen, FaPlus, FaTimes, FaTrash, FaSave, FaExternalLinkAlt } from "react-icons/fa";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import {
+  FaPen,
+  FaPlus,
+  FaTimes,
+  FaTrash,
+  FaSave,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-const ProjectsCard = ({ projects = [] }) => {
+const ProjectsCard = ({ portfolio }) => {
+  const projects = portfolio.projects;
   const [editIdx, setEditIdx] = useState(null);
   const [editProject, setEditProject] = useState({});
   const [projectList, setProjectList] = useState(projects);
@@ -25,35 +33,38 @@ const ProjectsCard = ({ projects = [] }) => {
   // Mutation for saving projects data
   const saveProjectsMutation = useMutation({
     mutationFn: async (projectsData) => {
-      console.log('Saving projects data:', projectsData); // DEBUG
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/portfolio/edit?email=testEmail@example.com`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
-          portfolio: { 
-            projects: projectsData 
-          } 
-        }),
-      });
-      
+      console.log("Saving projects data:", projectsData); // DEBUG
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${apiUrl}/portfolio/edit?email=testEmail@example.com`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            portfolio: {
+              projects: projectsData,
+            },
+          }),
+        }
+      );
+
       const result = await response.json();
-      console.log('Server response:', result); // DEBUG
-      
-      if (!response.ok) throw new Error('Failed to save projects');
+      console.log("Server response:", result); // DEBUG
+
+      if (!response.ok) throw new Error("Failed to save projects");
       return result;
     },
     onSuccess: (data) => {
-      console.log('Save successful:', data); // DEBUG
-      toast.success('Projects saved successfully!');
-      queryClient.invalidateQueries(['portfolio']);
+      console.log("Save successful:", data); // DEBUG
+      toast.success("Projects saved successfully!");
+      queryClient.invalidateQueries(["portfolio"]);
     },
     onError: (error) => {
-      console.error('Save failed:', error); // DEBUG
-      toast.error('Failed to save projects');
+      console.error("Save failed:", error); // DEBUG
+      toast.error("Failed to save projects");
     },
   });
 
@@ -110,13 +121,15 @@ const ProjectsCard = ({ projects = [] }) => {
         <h2 className="text-3xl font-bold text-white tracking-tight drop-shadow-sm">
           Projects
         </h2>
-        <button
-          onClick={() => setAdding(true)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500"
-          disabled={saveProjectsMutation.isPending}
-        >
-          <FaPlus className="w-4 h-4" /> Add Project
-        </button>
+        {portfolio.email === localStorage.getItem("email") && (
+          <button
+            onClick={() => setAdding(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500"
+            disabled={saveProjectsMutation.isPending}
+          >
+            <FaPlus className="w-4 h-4" /> Add Project
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -159,7 +172,7 @@ const ProjectsCard = ({ projects = [] }) => {
                   className="w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
                   placeholder="Project Name"
                 />
-                
+
                 <textarea
                   name="description"
                   value={editProject.description || ""}
@@ -168,7 +181,7 @@ const ProjectsCard = ({ projects = [] }) => {
                   placeholder="Project Description"
                   rows={4}
                 />
-                
+
                 <input
                   name="link"
                   value={editProject.link || ""}
@@ -196,7 +209,7 @@ const ProjectsCard = ({ projects = [] }) => {
                       {proj.description}
                     </p>
                   </div>
-                  
+
                   {proj.link && (
                     <div className="mt-4 pt-4 border-t border-white/20">
                       <a
@@ -226,7 +239,9 @@ const ProjectsCard = ({ projects = [] }) => {
               <FaTimes className="w-4 h-4" />
             </button>
 
-            <h3 className="text-xl font-bold text-white mb-6 drop-shadow-sm">Add New Project</h3>
+            <h3 className="text-xl font-bold text-white mb-6 drop-shadow-sm">
+              Add New Project
+            </h3>
 
             <div className="space-y-4 flex-1">
               <input
@@ -236,7 +251,7 @@ const ProjectsCard = ({ projects = [] }) => {
                 className="w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
                 placeholder="Project Name"
               />
-              
+
               <textarea
                 name="description"
                 value={newProject.description}
@@ -245,7 +260,7 @@ const ProjectsCard = ({ projects = [] }) => {
                 placeholder="Project Description"
                 rows={4}
               />
-              
+
               <input
                 name="link"
                 value={newProject.link}
@@ -259,7 +274,7 @@ const ProjectsCard = ({ projects = [] }) => {
                 className="w-full mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 disabled:opacity-50"
                 disabled={saveProjectsMutation.isPending}
               >
-                {saveProjectsMutation.isPending ? 'Saving...' : 'Add Project'}
+                {saveProjectsMutation.isPending ? "Saving..." : "Add Project"}
               </button>
             </div>
           </div>
