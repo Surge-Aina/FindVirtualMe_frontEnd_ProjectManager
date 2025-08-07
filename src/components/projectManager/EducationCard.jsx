@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaPen, FaPlus, FaTimes, FaTrash, FaSave } from "react-icons/fa";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-const EducationCard = ({ education = [] }) => {
+const EducationCard = ({ portfolio }) => {
+  const education = portfolio.education;
   const [editIdx, setEditIdx] = useState(null);
   const [editEdu, setEditEdu] = useState({});
   const [eduList, setEduList] = useState(education);
@@ -29,35 +30,38 @@ const EducationCard = ({ education = [] }) => {
   // Mutation for saving education data
   const saveEducationMutation = useMutation({
     mutationFn: async (educationData) => {
-      console.log('Saving education data:', educationData);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/portfolio/edit?email=testEmail@example.com`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
-          portfolio: { 
-            education: educationData 
-          } 
-        }),
-      });
-      
+      console.log("Saving education data:", educationData);
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${apiUrl}/portfolio/edit?email=testEmail@example.com`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            portfolio: {
+              education: educationData,
+            },
+          }),
+        }
+      );
+
       const result = await response.json();
-      console.log('Server response:', result);
-      
-      if (!response.ok) throw new Error('Failed to save education');
+      console.log("Server response:", result);
+
+      if (!response.ok) throw new Error("Failed to save education");
       return result;
     },
     onSuccess: (data) => {
-      console.log('Save successful:', data);
-      toast.success('Education saved successfully!');
-      queryClient.invalidateQueries(['portfolio']);
+      console.log("Save successful:", data);
+      toast.success("Education saved successfully!");
+      queryClient.invalidateQueries(["portfolio"]);
     },
     onError: (error) => {
-      console.error('Save failed:', error);
-      toast.error('Failed to save education');
+      console.error("Save failed:", error);
+      toast.error("Failed to save education");
     },
   });
 
@@ -78,8 +82,14 @@ const EducationCard = ({ education = [] }) => {
     const updated = [...eduList];
     updated[idx] = {
       ...editEdu,
-      degrees: editEdu.degrees.split(",").map((d) => d.trim()).filter(d => d),
-      awards: editEdu.awards.split(",").map((a) => a.trim()).filter(a => a),
+      degrees: editEdu.degrees
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d),
+      awards: editEdu.awards
+        .split(",")
+        .map((a) => a.trim())
+        .filter((a) => a),
     };
     setEduList(updated);
     saveEducationMutation.mutate(updated);
@@ -99,8 +109,14 @@ const EducationCard = ({ education = [] }) => {
   const handleAdd = () => {
     const newEducation = {
       ...newEdu,
-      degrees: newEdu.degrees.split(",").map((d) => d.trim()).filter(d => d),
-      awards: newEdu.awards.split(",").map((a) => a.trim()).filter(a => a),
+      degrees: newEdu.degrees
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d),
+      awards: newEdu.awards
+        .split(",")
+        .map((a) => a.trim())
+        .filter((a) => a),
     };
     const updated = [...eduList, newEducation];
     setEduList(updated);
@@ -132,15 +148,17 @@ const EducationCard = ({ education = [] }) => {
         <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight drop-shadow-sm">
           Education
         </h2>
-        <button
-          onClick={() => setAdding(true)}
-          className="self-start sm:self-auto px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500 text-sm sm:text-base"
-          disabled={saveEducationMutation.isPending}
-        >
-          <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden xs:inline">Add Education</span>
-          <span className="xs:hidden">Add</span>
-        </button>
+        {portfolio.email === localStorage.getItem("email") && (
+          <button
+            onClick={() => setAdding(true)}
+            className="self-start sm:self-auto px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500 text-sm sm:text-base"
+            disabled={saveEducationMutation.isPending}
+          >
+            <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden xs:inline">Add Education</span>
+            <span className="xs:hidden">Add</span>
+          </button>
+        )}
       </div>
 
       <div className="space-y-4 sm:space-y-6">
@@ -195,7 +213,9 @@ const EducationCard = ({ education = [] }) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">Start Date</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">
+                      Start Date
+                    </label>
                     <input
                       name="startDate"
                       type="date"
@@ -205,7 +225,9 @@ const EducationCard = ({ education = [] }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">End Date</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">
+                      End Date
+                    </label>
                     <input
                       name="endDate"
                       type="date"
@@ -265,7 +287,8 @@ const EducationCard = ({ education = [] }) => {
                     <div className="mt-2">
                       <div className="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1 bg-slate-700/50 rounded-full border border-white/20">
                         <span className="text-xs sm:text-sm text-slate-300 font-mono">
-                          {new Date(edu.startDate).toLocaleDateString()} – {new Date(edu.endDate).toLocaleDateString()}
+                          {new Date(edu.startDate).toLocaleDateString()} –{" "}
+                          {new Date(edu.endDate).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
@@ -280,10 +303,15 @@ const EducationCard = ({ education = [] }) => {
                   <div className="space-y-3 sm:space-y-0 sm:flex sm:flex-wrap sm:gap-4">
                     {edu.degrees?.length > 0 && (
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs sm:text-sm font-semibold text-blue-300 mb-1 sm:mb-2">Degrees</h4>
+                        <h4 className="text-xs sm:text-sm font-semibold text-blue-300 mb-1 sm:mb-2">
+                          Degrees
+                        </h4>
                         <div className="flex flex-wrap gap-1 sm:gap-2">
                           {edu.degrees.map((degree, i) => (
-                            <span key={i} className="px-2 py-1 sm:px-3 sm:py-1 bg-blue-500/20 text-blue-200 rounded-full text-xs sm:text-sm border border-blue-400/30">
+                            <span
+                              key={i}
+                              className="px-2 py-1 sm:px-3 sm:py-1 bg-blue-500/20 text-blue-200 rounded-full text-xs sm:text-sm border border-blue-400/30"
+                            >
                               {degree}
                             </span>
                           ))}
@@ -293,10 +321,15 @@ const EducationCard = ({ education = [] }) => {
 
                     {edu.awards?.length > 0 && (
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs sm:text-sm font-semibold text-amber-300 mb-1 sm:mb-2">Awards</h4>
+                        <h4 className="text-xs sm:text-sm font-semibold text-amber-300 mb-1 sm:mb-2">
+                          Awards
+                        </h4>
                         <div className="flex flex-wrap gap-1 sm:gap-2">
                           {edu.awards.map((award, i) => (
-                            <span key={i} className="px-2 py-1 sm:px-3 sm:py-1 bg-amber-500/20 text-amber-200 rounded-full text-xs sm:text-sm border border-amber-400/30">
+                            <span
+                              key={i}
+                              className="px-2 py-1 sm:px-3 sm:py-1 bg-amber-500/20 text-amber-200 rounded-full text-xs sm:text-sm border border-amber-400/30"
+                            >
                               {award}
                             </span>
                           ))}
@@ -320,7 +353,9 @@ const EducationCard = ({ education = [] }) => {
               <FaTimes className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
 
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 drop-shadow-sm pr-8">Add New Education</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 drop-shadow-sm pr-8">
+              Add New Education
+            </h3>
 
             <div className="space-y-3 sm:space-y-4">
               <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -342,7 +377,9 @@ const EducationCard = ({ education = [] }) => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">Start Date</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">
+                    Start Date
+                  </label>
                   <input
                     name="startDate"
                     type="date"
@@ -352,7 +389,9 @@ const EducationCard = ({ education = [] }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">End Date</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1 sm:mb-2">
+                    End Date
+                  </label>
                   <input
                     name="endDate"
                     type="date"
@@ -394,7 +433,9 @@ const EducationCard = ({ education = [] }) => {
                 className="w-full mt-4 sm:mt-6 px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 disabled:opacity-50 text-sm sm:text-base"
                 disabled={saveEducationMutation.isPending}
               >
-                {saveEducationMutation.isPending ? 'Saving...' : 'Add Education'}
+                {saveEducationMutation.isPending
+                  ? "Saving..."
+                  : "Add Education"}
               </button>
             </div>
           </div>
@@ -403,7 +444,9 @@ const EducationCard = ({ education = [] }) => {
 
       {eduList.length === 0 && !adding && (
         <div className="text-center py-8 sm:py-12">
-          <div className="text-slate-400 text-base sm:text-lg mb-4">No education entries yet</div>
+          <div className="text-slate-400 text-base sm:text-lg mb-4">
+            No education entries yet
+          </div>
           <button
             onClick={() => setAdding(true)}
             className="px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 text-sm sm:text-base"

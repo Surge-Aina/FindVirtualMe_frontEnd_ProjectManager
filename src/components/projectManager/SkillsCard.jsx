@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaPlus, FaTimes, FaTrash } from "react-icons/fa";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-const SkillsCard = ({ skills = [] }) => {
+const SkillsCard = ({ portfolio }) => {
+  const skills = portfolio.skills;
   const [skillList, setSkillList] = useState(skills);
   const [newSkill, setNewSkill] = useState("");
   const [adding, setAdding] = useState(false);
@@ -19,35 +20,38 @@ const SkillsCard = ({ skills = [] }) => {
   // Mutation for saving skills data
   const saveSkillsMutation = useMutation({
     mutationFn: async (skillsData) => {
-      console.log('Saving skills data:', skillsData); // DEBUG
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/portfolio/edit?email=testEmail@example.com`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
-          portfolio: { 
-            skills: skillsData 
-          } 
-        }),
-      });
-      
+      console.log("Saving skills data:", skillsData); // DEBUG
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${apiUrl}/portfolio/edit?email=testEmail@example.com`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            portfolio: {
+              skills: skillsData,
+            },
+          }),
+        }
+      );
+
       const result = await response.json();
-      console.log('Server response:', result); // DEBUG
-      
-      if (!response.ok) throw new Error('Failed to save skills');
+      console.log("Server response:", result); // DEBUG
+
+      if (!response.ok) throw new Error("Failed to save skills");
       return result;
     },
     onSuccess: (data) => {
-      console.log('Save successful:', data); // DEBUG
-      toast.success('Skills saved successfully!');
-      queryClient.invalidateQueries(['portfolio']);
+      console.log("Save successful:", data); // DEBUG
+      toast.success("Skills saved successfully!");
+      queryClient.invalidateQueries(["portfolio"]);
     },
     onError: (error) => {
-      console.error('Save failed:', error); // DEBUG
-      toast.error('Failed to save skills');
+      console.error("Save failed:", error); // DEBUG
+      toast.error("Failed to save skills");
     },
   });
 
@@ -68,7 +72,7 @@ const SkillsCard = ({ skills = [] }) => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleAddSkill();
     }
   };
@@ -79,13 +83,15 @@ const SkillsCard = ({ skills = [] }) => {
         <h2 className="text-3xl font-bold text-white tracking-tight drop-shadow-sm">
           Skills
         </h2>
-        <button
-          onClick={() => setAdding(true)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500"
-          disabled={saveSkillsMutation.isPending}
-        >
-          <FaPlus className="w-4 h-4" /> Add Skill
-        </button>
+        {portfolio.email === localStorage.getItem("email") && (
+          <button
+            onClick={() => setAdding(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500"
+            disabled={saveSkillsMutation.isPending}
+          >
+            <FaPlus className="w-4 h-4" /> Add Skill
+          </button>
+        )}
       </div>
 
       <div className="bg-slate-800 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6">
@@ -120,7 +126,7 @@ const SkillsCard = ({ skills = [] }) => {
                 <input
                   type="text"
                   value={newSkill}
-                  onChange={e => setNewSkill(e.target.value)}
+                  onChange={(e) => setNewSkill(e.target.value)}
                   onKeyPress={handleKeyPress}
                   className="w-full px-4 py-3 bg-slate-700 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
                   placeholder="Enter a new skill"
@@ -132,10 +138,13 @@ const SkillsCard = ({ skills = [] }) => {
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg border border-blue-500 disabled:opacity-50"
                 disabled={saveSkillsMutation.isPending}
               >
-                {saveSkillsMutation.isPending ? 'Saving...' : 'Add'}
+                {saveSkillsMutation.isPending ? "Saving..." : "Add"}
               </button>
               <button
-                onClick={() => { setAdding(false); setNewSkill(""); }}
+                onClick={() => {
+                  setAdding(false);
+                  setNewSkill("");
+                }}
                 className="px-4 py-3 text-slate-300 hover:text-white rounded-lg hover:bg-slate-700/50 transition-colors"
                 aria-label="Cancel"
               >

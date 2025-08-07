@@ -13,11 +13,11 @@ import "react-toastify/dist/ReactToastify.css";
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   {
-    path: "/portfolio",
+    path: "/portfolio/:id",
     element: (
-      <ProtectedRoute>
-        <PortfolioPage />
-      </ProtectedRoute>
+      //<ProtectedRoute>
+      <PortfolioPage />
+      //</ProtectedRoute>
     ),
   },
 
