@@ -3,7 +3,8 @@ import { FaPen, FaPlus, FaTimes, FaTrash, FaSave } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-const ExperienceCard = ({ experiences = [] }) => {
+const ExperienceCard = ({ portfolio }) => {
+  const experiences = portfolio.experiences;
   const [editIdx, setEditIdx] = useState(null);
   const [editExp, setEditExp] = useState({});
   const [expList, setExpList] = useState(experiences);
@@ -118,15 +119,17 @@ const ExperienceCard = ({ experiences = [] }) => {
         <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight drop-shadow-sm">
           Experience
         </h2>
-        <button
-          onClick={() => setAdding(true)}
-          className="self-start sm:self-auto px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500 text-sm sm:text-base"
-          disabled={saveExperienceMutation.isPending}
-        >
-          <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden xs:inline">Add Experience</span>
-          <span className="xs:hidden">Add</span>
-        </button>
+        {portfolio.email === localStorage.getItem("email") && (
+          <button
+            onClick={() => setAdding(true)}
+            className="self-start sm:self-auto px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-lg border border-blue-500 text-sm sm:text-base"
+            disabled={saveExperienceMutation.isPending}
+          >
+            <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden xs:inline">Add Experience</span>
+            <span className="xs:hidden">Add</span>
+          </button>
+        )}
       </div>
 
       <div className="space-y-4 sm:space-y-6">
